@@ -47,12 +47,9 @@ async function main() {
         chalk.bold.cyan("\n🚀 Raycast Extension Windows Migration Tool\n"),
     );
 
-    let stepNumber = 1;
-    const totalSteps = skipAppleScript ? 5 : 6;
-
     // Step 1: Check AppleScript usage (optional)
+    console.log(chalk.bold("Step 1/6: Check AppleScript usage"));
     if (!skipAppleScript) {
-        console.log(chalk.bold(`Step ${stepNumber}/${totalSteps}: Check AppleScript usage`));
         const spinner1 = ora("Scanning project files...").start();
 
         const appleScriptCheck = checkAppleScript(projectPath);
@@ -77,17 +74,13 @@ async function main() {
         }
 
         spinner1.succeed(chalk.green("No AppleScript usage detected"));
-        stepNumber++;
     } else {
-        console.log(
-            chalk.yellow(
-                "\n⚠️  Skipping AppleScript check (--skip-applescript or -s flag detected)\n",
-            ),
-        );
+        const spinner1 = ora("Skipped").start();
+        spinner1.succeed(chalk.gray("Skipped (--skip-applescript or -s flag detected)"));
     }
 
     // Step 2: Update dependencies
-    console.log(chalk.bold(`\nStep ${stepNumber}/${totalSteps}: Update dependencies`));
+    console.log(chalk.bold("\nStep 2/6: Update dependencies"));
     const spinner2 = ora("Running npm-check-updates...").start();
 
     const updateResult = await updateDependencies(projectPath);
@@ -104,10 +97,9 @@ async function main() {
     if (updateResult.ncuOutput) {
         console.log(chalk.gray(updateResult.ncuOutput));
     }
-    stepNumber++;
 
     // Step 3: Update ESLint configuration
-    console.log(chalk.bold(`\nStep ${stepNumber}/${totalSteps}: Update ESLint configuration`));
+    console.log(chalk.bold("\nStep 3/6: Update ESLint configuration"));
     const spinner3 = ora("Updating ESLint configuration...").start();
 
     const eslintResult = updateEslintConfig(projectPath);
@@ -121,10 +113,9 @@ async function main() {
     eslintResult.actions.forEach((action) => {
         console.log(chalk.gray(`  - ${action}`));
     });
-    stepNumber++;
 
     // Step 4: Update package.json platforms
-    console.log(chalk.bold(`\nStep ${stepNumber}/${totalSteps}: Update package.json platforms`));
+    console.log(chalk.bold("\nStep 4/6: Update package.json platforms"));
     const spinner4 = ora("Updating platforms field...").start();
 
     const packageJsonResult = updatePackageJsonPlatforms(projectPath);
@@ -138,10 +129,9 @@ async function main() {
     if (packageJsonResult.action) {
         console.log(chalk.gray(`  - ${packageJsonResult.action}`));
     }
-    stepNumber++;
 
     // Step 5: Run ray lint --fix
-    console.log(chalk.bold(`\nStep ${stepNumber}/${totalSteps}: Run ray lint --fix`));
+    console.log(chalk.bold("\nStep 5/6: Run ray lint --fix"));
     const spinner5 = ora("Running Raycast lint...").start();
 
     const lintResult = runCommand("npx ray lint --fix", projectPath);
@@ -153,10 +143,9 @@ async function main() {
     if (lintResult.error) {
         console.log(chalk.yellow(lintResult.error));
     }
-    stepNumber++;
 
     // Step 6: Run npm run build
-    console.log(chalk.bold(`\nStep ${stepNumber}/${totalSteps}: Run npm run build`));
+    console.log(chalk.bold("\nStep 6/6: Run npm run build"));
     const spinner6 = ora("Building project...").start();
 
     const buildResult = runCommand("npm run build", projectPath);
@@ -178,11 +167,9 @@ async function main() {
     // Complete
     console.log(chalk.bold.green("\n✅ Migration completed!\n"));
     console.log(chalk.cyan("Next steps:"));
-    const lintStep = skipAppleScript ? 4 : 5;
-    const buildStep = skipAppleScript ? 5 : 6;
     console.log(
         chalk.white(
-            `1. Verify that step ${lintStep} (lint) and step ${buildStep} (build) passed successfully, if not, fix the errors and run the tool again`,
+            "1. Verify that step 5 (lint) and step 6 (build) passed successfully, if not, fix the errors and run the tool again",
         ),
     );
     console.log(
