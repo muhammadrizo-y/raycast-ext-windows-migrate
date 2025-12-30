@@ -6,7 +6,9 @@ import { updateEslintConfig } from "./utils/updateEslint.js";
 import { updatePackageJsonPlatforms } from "./utils/updatePackageJson.js";
 
 function showHelp() {
-    console.log(chalk.bold.cyan("\n🚀 Raycast Extension Windows Migration Tool\n"));
+    console.log(
+        chalk.bold.cyan("\n🚀 Raycast Extension Windows Migration Tool\n"),
+    );
     console.log(chalk.bold("Usage:"));
     console.log(chalk.gray("  raycast-ext-windows-migrate [options]\n"));
     console.log(chalk.bold("Options:"));
@@ -16,20 +18,30 @@ function showHelp() {
         "\n    ",
         chalk.gray("Skip the AppleScript usage check."),
         "\n    ",
-        chalk.gray("Use if you've already implemented Windows PowerShell alternatives."),
-        "\n"
+        chalk.gray(
+            "Use if you've already implemented Windows PowerShell alternatives.",
+        ),
+        "\n",
     );
     console.log(
         chalk.white.bold("  --help, -h"),
         "\n    ",
         chalk.gray("Show this help message."),
-        "\n"
+        "\n",
     );
     console.log(chalk.bold("Steps:"));
-    console.log(chalk.gray("  1. Check AppleScript usage (optional, skipped with -s flag)"));
-    console.log(chalk.gray("  2. Update all dependencies to the latest version"));
+    console.log(
+        chalk.gray(
+            "  1. Check AppleScript usage (optional, skipped with -s flag)",
+        ),
+    );
+    console.log(
+        chalk.gray("  2. Update all dependencies to the latest version"),
+    );
     console.log(chalk.gray("  3. Configure ESLint to the latest format"));
-    console.log(chalk.gray("  4. Update package.json to add Windows platform support"));
+    console.log(
+        chalk.gray("  4. Update package.json to add Windows platform support"),
+    );
     console.log(chalk.gray("  5. Run lint and build checks\n"));
     process.exit(0);
 }
@@ -41,7 +53,9 @@ async function main() {
     }
 
     const projectPath = process.cwd();
-    const skipAppleScript = process.argv.includes("--skip-applescript") || process.argv.includes("-s");
+    const skipAppleScript =
+        process.argv.includes("--skip-applescript") ||
+        process.argv.includes("-s");
 
     console.log(
         chalk.bold.cyan("\n🚀 Raycast Extension Windows Migration Tool\n"),
@@ -76,7 +90,9 @@ async function main() {
         spinner1.succeed(chalk.green("No AppleScript usage detected"));
     } else {
         const spinner1 = ora("Skipped").start();
-        spinner1.succeed(chalk.gray("Skipped (--skip-applescript or -s flag detected)"));
+        spinner1.succeed(
+            chalk.gray("Skipped (--skip-applescript or -s flag detected)"),
+        );
     }
 
     // Step 2: Update dependencies

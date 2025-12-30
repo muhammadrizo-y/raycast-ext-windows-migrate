@@ -34,6 +34,17 @@ The tool will automatically:
 5. Run `npx ray lint --fix`
 6. Run `npm run build`
 
+### Flags
+
+```
+
+--skip-applescript, -s   Skips AppleScript check, use if you've already
+                         implemented a Windows PowerShell alternative
+
+            --help, -h   Shows help message
+
+```
+
 ## Post-completion Steps
 
 1. Verify that step 5 (lint) and step 6 (build) passed successfully
