@@ -1,6 +1,8 @@
-export interface AppleScriptCheckResult {
+export interface MacSpecificCodeCheckResult {
     hasAppleScript: boolean;
+    hasMacCommands: boolean;
     files: string[];
+    macCommandFiles: string[];
 }
 
 export interface CommandResult {

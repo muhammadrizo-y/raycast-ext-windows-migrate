@@ -37,8 +37,11 @@ export async function updateDependencies(
         };
     }
 
-    // Execute npm install
-    const installResult = executeCommand("npm install", projectPath);
+    // Execute npm install with --legacy-peer-deps to handle potential peer dependency conflicts
+    const installResult = executeCommand(
+        "npm install --legacy-peer-deps",
+        projectPath,
+    );
 
     if (!installResult.success) {
         return {

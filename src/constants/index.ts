@@ -12,6 +12,12 @@ export const APPLE_SCRIPT_KEYWORDS = [
     /runAppleScript/i,
 ] as const;
 
+export const MAC_COMMAND_KEYWORDS = [
+    /\/usr\/sbin\//i,
+    /\/System\/Library\//i,
+    /screencapture\s+/i,
+] as const;
+
 export const SUPPORTED_FILE_EXTENSIONS = [
     ".ts",
     ".tsx",

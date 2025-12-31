@@ -1,9 +1,10 @@
 import fs from "fs";
 import path from "path";
-import type { AppleScriptCheckResult } from "../types/index.js";
+import type { MacSpecificCodeCheckResult } from "../types/index.js";
 import {
     IGNORED_DIRECTORIES,
     APPLE_SCRIPT_KEYWORDS,
+    MAC_COMMAND_KEYWORDS,
     SUPPORTED_FILE_EXTENSIONS,
 } from "../constants/index.js";
 
@@ -26,11 +27,34 @@ function checkFileForAppleScript(filePath: string): boolean {
     }
 }
 
+function checkFileForMacCommands(filePath: string): boolean {
+    try {
+        const content = fs.readFileSync(filePath, "utf-8");
+
+        for (const keyword of MAC_COMMAND_KEYWORDS) {
+            if (keyword.test(content)) {
+                return true;
+            }
+        }
+
+        return false;
+    } catch (error) {
+        const errorMessage =
+            error instanceof Error ? error.message : String(error);
+        console.error(`Failed to read file: ${filePath}`, errorMessage);
+        return false;
+    }
+}
+
 function scanDirectory(
     dir: string,
     extensions: readonly string[] = SUPPORTED_FILE_EXTENSIONS,
-): string[] {
+): {
+    filesWithAppleScript: string[];
+    filesWithMacCommands: string[];
+} {
     const filesWithAppleScript: string[] = [];
+    const filesWithMacCommands: string[] = [];
 
     function scan(currentDir: string): void {
         try {
@@ -54,6 +78,9 @@ function scanDirectory(
                         if (checkFileForAppleScript(fullPath)) {
                             filesWithAppleScript.push(fullPath);
                         }
+                        if (checkFileForMacCommands(fullPath)) {
+                            filesWithMacCommands.push(fullPath);
+                        }
                     }
                 }
             }
@@ -68,14 +95,19 @@ function scanDirectory(
     }
 
     scan(dir);
-    return filesWithAppleScript;
+    return { filesWithAppleScript, filesWithMacCommands };
 }
 
-export function checkAppleScript(projectPath: string): AppleScriptCheckResult {
-    const filesWithAppleScript = scanDirectory(projectPath);
+export function checkMacSpecificCode(
+    projectPath: string,
+): MacSpecificCodeCheckResult {
+    const { filesWithAppleScript, filesWithMacCommands } =
+        scanDirectory(projectPath);
 
     return {
         hasAppleScript: filesWithAppleScript.length > 0,
+        hasMacCommands: filesWithMacCommands.length > 0,
         files: filesWithAppleScript,
+        macCommandFiles: filesWithMacCommands,
     };
 }
